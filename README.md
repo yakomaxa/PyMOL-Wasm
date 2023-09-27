@@ -16,7 +16,7 @@ This is a repository providing a binary and html/javascript code for WebAssembly
 # Current Limitation
 
 * Too large structures cannot be loaded.
-* The resizing window after launching PyMOL makes the click-position recogntion.
+* The resizing window after launching PyMOL makes the click-position recogntion wrong.
 * The dot representation is very weak to see.
 * Trying to show the cell (unit cell) crashes the session
 
