@@ -11,7 +11,7 @@ This is a repository providing a binary and html/javascript code for WebAssembly
 * The frontend part (Javascript and html) follows MIT license.
 
 # Demonstration page
-* Vist here: [Quite a simple demo page](https://yakomaxa.github.io/PyMOL-Wasm/)
+* Visit here: [Quite a simple demo page](https://yakomaxa.github.io/PyMOL-Wasm/)
 
 # Current Limitation
 
