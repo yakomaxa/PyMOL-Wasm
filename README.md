@@ -15,11 +15,11 @@ This is a repository providing a binary and html/javascript code for WebAssembly
 
 # Current Limitation
 
+* Selection by clicking behave slightly different from original PyMOL. Try moving the pointer after clicking.
 * Too large structures cannot be loaded.
 * The resizing window after launching PyMOL makes the click-position recogntion wrong.
-* The dot representation is very weak to see.
-* Trying to show the cell (unit cell) crashes the session
-
+* The dot representation is very weak to see and very heavy to load.
+* Trying to show the cell (unit cell) crashes the session.
 
 # Dependency and requirements for building 
 
