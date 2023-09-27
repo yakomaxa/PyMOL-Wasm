@@ -34,3 +34,7 @@ This is a repository providing a binary and html/javascript code for WebAssembly
 * The whl is loaded by Pyodide.
 * Pyodide executes pymol commands called by Javascript.
 * Javascript controls which pymol commands should be executed.
+
+# Feedbacks
+
+* We appreciate your feedbacks to improve this project.
