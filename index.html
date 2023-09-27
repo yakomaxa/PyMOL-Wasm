@@ -27,8 +27,6 @@
   <body>
     <canvas id="canvas" width="1024" height="600"></canvas>
     <div id="drop-area1">Drag and drop pdb file here, or click to select pdb file</div>
-    <center><button id="my-button">Load</button></center>
-    <center><button id="centerbutton">Center</button></center>
     <p>
     <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
@@ -269,22 +267,6 @@
 	  }, 100);
       })
 
-      const CButton = document.getElementById('centerbutton');
-      CButton.addEventListener('click', async function(){
-      var mouseX = 1000
-      var mouseY = 500
-      await pyodide.globals.set("x",mouseX);
-      await pyodide.globals.set("y",mouseY);          
-      await pyodide.runPythonAsync(`
-      #_p._cmd.glViewport(0, 0, width,height)
-      #_p.cmd.viewport(width-gui_width,height)
-      #_p.idle()
-      _p.draw()   
-
-      `);
-      }
-      )
-     
      
       let lastMouseX = null;
       let lastMouseY = null;
