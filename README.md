@@ -27,3 +27,10 @@ This is a repository providing a binary and html/javascript code for WebAssembly
 * [gl4es](https://github.com/ptitSeb/gl4es)
 * [exodide](https://github.com/ymd-h/exodide)
 * [pyodide](https://github.com/pyodide/pyodide)
+
+# How this works
+
+* PyMOL source code was built into whl by emscripten with help of exodide.
+* The whl is loaded by Pyodide.
+* Pyodide executes pymol commands called by Javascript.
+* Javascript controls which pymol commands should be executed.
