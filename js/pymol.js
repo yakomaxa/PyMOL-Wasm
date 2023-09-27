@@ -1,4 +1,4 @@
-let async pymol = (whlurl,OriginX,OriginY,width,height,gui_width,pdb1,filename1) => {
+function pymol(whlurl,OriginX,OriginY,width,height,gui_width,pdb1,filename1){
     let pyodide = await loadPyodide();
     let loaded = false;
     await pyodide.loadPackage(whlurl);
