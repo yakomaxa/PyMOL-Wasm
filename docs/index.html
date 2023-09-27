@@ -30,8 +30,8 @@
     <center><button id="my-button">Load</button></center>
     <center><button id="centerbutton">Center</button></center>
     <p>
-      <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
-      <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
+    <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
     <script>
       let pdb1="";
       let filename1="dummy1.pdb";
@@ -188,7 +188,7 @@
       //import { loadPyodide} from "./dist/pyodide.mjs";
       let pyodide = await loadPyodide();
       let loaded = false;
-      await pyodide.loadPackage("./dist/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
+      await pyodide.loadPackage("https://github.com/yakomaxa/PyMOL-Wasm/raw/main/whl/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
       // Run PyMOL code
       const width = 1024;
       const height = 600;
@@ -617,5 +617,6 @@
 
       
     </script>
+    <a href="https://github.com/yakomaxa/PyMOL-Wasm"> GitHub Repo for this project (binary and javascript only at this moement) </a> 
   </body>
 </html>
