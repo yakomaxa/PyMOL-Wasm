@@ -44,3 +44,7 @@ I've checked latest google chrome and firefox can run this project.
 
 * We appreciate your feedbacks to improve this project.
 
+# ToDo
+
+* Refinement/refactoring of index.html should be done. It's now quite primitive html/javascript.
+* See issues for other ideas.
