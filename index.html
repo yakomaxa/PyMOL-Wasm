@@ -297,7 +297,7 @@
         print("DONE")
       `).then(async ()=>{
           var data = await pyodide.FS.readFile('/test.png');
-          var blob = new Blob([data], { type: 'application/octet-stream' }};
+          var blob = new Blob([data], { type: 'application/octet-stream' });
           var url = URL.createObjectURL(blob);
           var link = document.createElement('a');
           link.href = url;
