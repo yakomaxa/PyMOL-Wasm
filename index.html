@@ -270,9 +270,9 @@
       })
 
       const rayButton = document.getElementById('ray-button');
-      rayButton.addEventListener('click', async function(){{
-	  setTimeout(async () => {{
-	      try {{
+      rayButton.addEventListener('click', async function(){
+	  setTimeout(async () => {
+	      try {
         await pyodide.runPythonAsync(`
         _p.cmd.bg_color("white")
         _p.cmd.set("antialias",2)
@@ -295,24 +295,24 @@
         _p.cmd.set("ray_trace_mode",0)
         _p.cmd.set("ray_opaque_background",0)
         print("DONE")
-      `).then(async ()=>{{
+      `).then(async ()=>{
           var data = await pyodide.FS.readFile('/test.png');
-          var blob = new Blob([data], {{ type: 'application/octet-stream' }});
+          var blob = new Blob([data], { type: 'application/octet-stream' }};
           var url = URL.createObjectURL(blob);
           var link = document.createElement('a');
           link.href = url;
           link.download = filename1+".png"; // Change the filename as needed
           document.body.appendChild(link); // Add link to DOM
           link.click();
-      }}
+      }
       );
 
-        }} catch (error) {{
+        } catch (error) {
 
 
-	      }}
-	  }}, 100);
-      }})
+	      }
+	  }, 100);
+      })
 
      
       let lastMouseX = null;
