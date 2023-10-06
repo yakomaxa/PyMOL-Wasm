@@ -28,10 +28,22 @@
     <canvas id="canvas" width="1024" height="600"></canvas>
     <div id="drop-area1">Drag and drop pdb file here, or click to select pdb file</div>
     <center><button id="my-button">Press here to launch PyMOL after selecting PDB file</button></center>
-    <center><button id="ray-button">Press here to ray</button></center>    
+    <center><button id="ray-button">Press here to ray</button></center>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button onclick="showMessage()">Greet</button>
+    <div id="greeting"></div>
     <p>
     <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
+
+    <script type="text/javascript">
+      function showMessage() {
+          var name = document.getElementById("nameInput").value;
+          console.log("Name:", name);
+          document.getElementById("greeting").innerText = "Hello, " + name + "!";
+      }
+    </script>
+    
     <script>
       let pdb1="";
       let filename1="dummy1.pdb";
@@ -235,8 +247,7 @@
 		  await pyodide.FS.writeFile(filename1, pdb1);
 		  await pyodide.globals.set("fname1",filename1);
 		  await pyodide.runPythonAsync(`
-      #_p.cmd.load(fname1)
-      _p.cmd.fetch("1mbn")
+      _p.cmd.load(fname1)
       _p.cmd.set("label_font_id", 10)
       _p.cmd.set("label_size", 30)
       _p.cmd.set("sphere_mode", 0)
