@@ -325,7 +325,7 @@
       document.getElementById("greeting").innerText = "Hello, " + name + "!";
       await pyodide.globals.set("command",name);
       await pyodide.runPythonAsync(`
-      _p.cmd.run(command)
+      _p.cmd.do(command)
       `)
         } catch (error) {
 
