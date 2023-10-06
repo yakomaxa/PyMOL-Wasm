@@ -322,18 +322,17 @@
       })
 
 
-     document.addEventListener("DOMContentLoaded", function() {
-          var cmdinput = document.getElementById("cmdInput");	  
-          cmdinput.addEventListener("keypress", function(event) {
-              if (event.key === "Enter") {
-                  event.preventDefault(); // Prevent the default action (if any)
-		  usetTimeout(async () => {
-		      try {
-			  var command = document.getElementById("cmdInput").value;
-			  console.log("Command", command);
-			  document.getElementById("commandline").innerText = command;
-			  await pyodide.globals.set("command",command);
-			  await pyodide.runPythonAsync(`
+      var cmdinput = document.getElementById("cmdInput");	  
+      cmdinput.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+      event.preventDefault(); // Prevent the default action (if any)
+      usetTimeout(async () => {
+      try {
+      var command = document.getElementById("cmdInput").value;
+      console.log("Command", command);
+      document.getElementById("commandline").innerText = command;
+      await pyodide.globals.set("command",command);
+      await pyodide.runPythonAsync(`
       _p.cmd.do(command)
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
@@ -343,17 +342,14 @@
 
       `)
        cmdInput.value = ""
-		      } catch (error) {
-			  
-			  
-		      }
-		  }, 100);
-	      }
-	  });
-     })
-   
-
-     
+      } catch (error) {
+      
+      
+      }
+      }, 100);
+      }
+      });
+        
       let lastMouseX = null;
       let lastMouseY = null;
       let mouseStoppedTimeout = null;
@@ -363,14 +359,17 @@
       let leftButtonCallNum_ctrl = 0;
       let mouseButtonDown = false;
       let key_ctrl = false;
+      let key_enter = false;
       var goLeftDown=false;
       
       async function onKeyDown(event){
-	  key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+         key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+         key_enter = event.Enter;
       }
 
       async function onKeyUp(event){
-          key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+         key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+         key_enter = event.Enter;
       }
 
 
