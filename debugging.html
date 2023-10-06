@@ -23,13 +23,18 @@
       text-align: center;
       }
     </style>
+    <style>
+        #cmdInput {
+            width: 300px;
+        }
+    </style>
   </head>
   <body>
     <canvas id="canvas" width="1024" height="600"></canvas>
     <div id="drop-area1">Drag and drop pdb file here, or click to select pdb file</div>
     <center><button id="my-button">Press here to launch PyMOL after selecting PDB file</button></center>
     <center><button id="ray-button">Press here to ray</button></center>
-    <input type="text" id="cmdInput" placeholder="Enter PyMOL command">
+    <center><input type="text" id="cmdInput" placeholder="Enter PyMOL command"></center>
     <center><button id="cmd-button">Command</button></center>
     <center><div id="commandline"></div></center>
     <p>
@@ -338,6 +343,7 @@
       _p.draw()
 
       `)
+       cmdInput.value = ""
 		      } catch (error) {
 			  
 			  
