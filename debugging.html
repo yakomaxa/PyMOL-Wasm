@@ -324,7 +324,7 @@
 
      document.addEventListener("DOMContentLoaded", function() {
           var cmdinput = document.getElementById("cmdInput");	  
-          cmdinput.addEventListener("keyup", function(event) {
+          cmdinput.addEventListener("keypress", function(event) {
               if (event.key === "Enter") {
                   event.preventDefault(); // Prevent the default action (if any)
 		  usetTimeout(async () => {
@@ -370,7 +370,7 @@
       }
 
       async function onKeyUp(event){
-	  key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+          key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
       }
 
 
