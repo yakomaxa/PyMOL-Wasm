@@ -235,9 +235,7 @@
 		  await pyodide.FS.writeFile(filename1, pdb1);
 		  await pyodide.globals.set("fname1",filename1);
 		  await pyodide.runPythonAsync(`
-      _p.cmd.delete("all")
       _p.cmd.load(fname1)
-      _p.cmd.hide()
       _p.cmd.set("label_font_id", 10)
       _p.cmd.set("label_size", 30)
       _p.cmd.set("sphere_mode", 0)
@@ -247,10 +245,6 @@
       _p.cmd.set("line_width",5)
       _p.cmd.set("trilines","on")
       _p.cmd.set("dash_as_cylinders","on")
-      #_p.cmd.set("use_shaders")
-      #_p.cmd.show("everythin","all")
-      _p.cmd.show("cartoon")
-      _p.cmd.show("stick","het")
       _p.cmd.set("internal_gui",1)
       _p.cmd.set("internal_gui_width",gui_width)
       _p.cmd.set("internal_feedback", 0)
