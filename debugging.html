@@ -35,7 +35,6 @@
     <center><button id="my-button">Press here to launch PyMOL after selecting PDB file</button></center>
     <center><button id="ray-button">Press here to ray</button></center>
     <center><input type="text" id="cmdInput" placeholder="Enter PyMOL command"></center>
-    <center><button id="cmd-button">Command</button></center>
     <center><div id="commandline"></div></center>
     <p>
     <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
@@ -321,18 +320,17 @@
 	  }, 100);
       })
 
-
-      var cmdinput = document.getElementById("cmdInput");	  
-      cmdinput.addEventListener("keypress", function(event) {
-      if (event.key === "Enter") {
-      event.preventDefault(); // Prevent the default action (if any)
-      setTimeout(async () => {
-      try {
-      var command = document.getElementById("cmdInput").value;
-      console.log("Command", command);
-      document.getElementById("commandline").innerText = command;
-      await pyodide.globals.set("command",command);
-      await pyodide.runPythonAsync(`
+      if (loaded){
+	  var cmdinput = document.getElementById("cmdInput");	  
+	  cmdinput.addEventListener("keypress", function(event) {
+	      if (event.key === "Enter") {
+		  event.preventDefault(); // Prevent the default action (if any)
+		  setTimeout(async () => {
+		      try {
+			  var command = document.getElementById("cmdInput").value;
+			  //document.getElementById("commandline").innerText = command;
+			  await pyodide.globals.set("command",command);
+			  await pyodide.runPythonAsync(`
       _p.cmd.do(command)
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
@@ -341,15 +339,16 @@
       _p.draw()
 
       `)
-       cmdInput.value = ""
-      } catch (error) {
+			  cmdInput.value = ""
+		      } catch (error) {
+			  
       
+		      }
+		  }, 100);
+	      }
+	  });
+      }
       
-      }
-      }, 100);
-      }
-      });
-        
       let lastMouseX = null;
       let lastMouseY = null;
       let mouseStoppedTimeout = null;
