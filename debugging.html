@@ -320,34 +320,32 @@
 	  }, 100);
       })
 
-      if (loaded){
-	  var cmdinput = document.getElementById("cmdInput");	  
-	  cmdinput.addEventListener("keypress", function(event) {
-	      if (event.key === "Enter") {
-		  event.preventDefault(); // Prevent the default action (if any)
-		  setTimeout(async () => {
-		      try {
-			  var command = document.getElementById("cmdInput").value;
-			  //document.getElementById("commandline").innerText = command;
-			  await pyodide.globals.set("command",command);
-			  await pyodide.runPythonAsync(`
-      _p.cmd.do(command)
-      _p.idle()
-      _p._cmd.glViewport(0, 0, width,height)
-      _p.cmd.viewport(width-gui_width,height)
-      _p.idle()
-      _p.draw()
-
-      `)
-			  cmdInput.value = ""
-		      } catch (error) {
-			  
-      
-		      }
-		  }, 100);
-	      }
-	  });
-      }
+	var cmdinput = document.getElementById("cmdInput");	  
+	cmdinput.addEventListener("keypress", async function(event) {
+	if (event.key === "Enter" && loaded) {
+	event.preventDefault(); // Prevent the default action (if any)
+	setTimeout(async () => {
+	try {
+	var command = document.getElementById("cmdInput").value;
+	//document.getElementById("commandline").innerText = command;
+	await pyodide.globals.set("command",command);
+	await pyodide.runPythonAsync(`
+	_p.cmd.do(command)
+	_p.idle()
+	_p._cmd.glViewport(0, 0, width,height)
+	_p.cmd.viewport(width-gui_width,height)
+	_p.idle()
+	_p.draw()
+	
+	`)
+	cmdInput.value = ""
+	} catch (error) {
+	
+	
+	}
+	}, 100);
+	}
+	});
       
       let lastMouseX = null;
       let lastMouseY = null;
