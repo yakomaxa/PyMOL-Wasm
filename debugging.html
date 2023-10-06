@@ -35,15 +35,7 @@
     <p>
     <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
-
-    <script type="text/javascript">
-      function showMessage() {
-          var name = document.getElementById("nameInput").value;
-          console.log("Name:", name);
-          document.getElementById("greeting").innerText = "Hello, " + name + "!";
-      }
-    </script>
-    
+       
     <script>
       let pdb1="";
       let filename1="dummy1.pdb";
@@ -323,6 +315,25 @@
 	      }
 	  }, 100);
       })
+
+      const cmdButton = document.getElementById('cmd-button');
+      cmdButton.addEventListener('click', async function(){
+	  setTimeout(async () => {
+      try {
+      var name = document.getElementById("nameInput").value;
+      console.log("Name:", name);
+      document.getElementById("greeting").innerText = "Hello, " + name + "!";
+      await pyodide.globals.set("command",name);
+      await pyodide.runPythonAsync(`
+      _p.cmd.run(command)
+      `)
+        } catch (error) {
+
+
+	      }
+	  }, 100);
+      })
+   
 
      
       let lastMouseX = null;
