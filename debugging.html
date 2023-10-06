@@ -323,9 +323,8 @@
 
 
      document.addEventListener("DOMContentLoaded", function() {
-          var input = document.getElementById("cmdInput");
-	  
-          input.addEventListener("keydown", async function(event) {
+          var cmdinput = document.getElementById("cmdInput");	  
+          cmdinput.addEventListener("keydown", async function(event) {
               if (event.key === "Enter") {
                   event.preventDefault(); // Prevent the default action (if any)
 		  usetTimeout(async () => {
