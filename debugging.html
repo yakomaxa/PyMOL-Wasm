@@ -629,13 +629,12 @@
 
       async function animate() {
       if (frameCounter >= frameLimit) {
-      animating = false;
-      return;
-      }
-
-      // Update the animation here
+	animating = false;
+	return;
+	}
+	// Update the animation here
 	await  pyodide.runPythonAsync(`
-	_p.cmd.select("sele") 
+	_p.cmd.select("sele")
 	_p._cmd.glViewport(0, 0, width,height)
 	_p.cmd.viewport(width-gui_width,height)
         _p.idle()
