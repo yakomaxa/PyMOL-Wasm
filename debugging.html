@@ -626,22 +626,22 @@
       const frameLimit = 2;
       let frameCounter = 0;
       let animating = false;
-
+      
       async function animate() {
       if (frameCounter >= frameLimit) {
-	animating = false;
-	return;
-	}
-	// Update the animation here
-	await  pyodide.runPythonAsync(`
-	_p.cmd.select("sele")
-	_p._cmd.glViewport(0, 0, width,height)
-	_p.cmd.viewport(width-gui_width,height)
-        _p.idle()
-        _p.draw()
-	`);
-     
-
+      animating = false;
+      return;
+      }
+      // Update the animation here
+      await  pyodide.runPythonAsync(`
+      _p.cmd.select("sele")
+      _p._cmd.glViewport(0, 0, width,height)
+      _p.cmd.viewport(width-gui_width,height)
+      _p.idle()
+      _p.draw()
+      `);
+      
+      
       frameCounter++;
       requestAnimationFrame(animate);
       }
