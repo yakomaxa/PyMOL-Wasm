@@ -634,13 +634,13 @@
       }
 
       // Update the animation here
-      await  pyodide.runPythonAsync(`
+	await  pyodide.runPythonAsync(`
 	_p.cmd.select("sele") 
 	_p._cmd.glViewport(0, 0, width,height)
 	_p.cmd.viewport(width-gui_width,height)
         _p.idle()
         _p.draw()
-      `);
+	`);
      
 
       frameCounter++;
