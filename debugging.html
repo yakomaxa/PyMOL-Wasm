@@ -602,14 +602,7 @@
 	  var mouseY = event.clientY - OriginY;
 	  await pyodide.globals.set("x",mouseX);
 	  await pyodide.globals.set("y",mouseY);
-	  await  pyodide.runPythonAsync(`
-      _p.cmd.do("")
-      _p.idle()
-      _p._cmd.glViewport(0, 0, width,height)
-      _p.cmd.viewport(width-gui_width,height)
-      _p.idle()
-      _p.draw()
-`)
+
 	  await  pyodide.runPythonAsync(`
       _p.button(0, 0, int(x), int(height - y), 0)
       _p.idle()
