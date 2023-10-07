@@ -244,6 +244,7 @@
 		  await pyodide.globals.set("fname1",filename1);
 		  await pyodide.runPythonAsync(`
       _p.cmd.load(fname1)
+      _p.cmd.set("suspend_deferred","on")
       _p.cmd.set("label_font_id", 10)
       _p.cmd.set("label_size", 30)
       _p.cmd.set("sphere_mode", 0)
