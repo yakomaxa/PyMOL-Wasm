@@ -10,25 +10,65 @@
     }
     </style>
     <style>
+      #load-pdb-area {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      #load-pdb-area span.separator {
+        margin: 0 20px;
+        font-size: 24px;
+      }
+      #load-pdb-area span#load-message {
+        margin: 0 20px;
+        font-size: 18px;
+        color: red;
+      }
+      #DBID {
+        width: 200px;
+        text-align: center;
+      }
       #drop-area1 {
       border: 2px dashed #ccc;
       border-radius: 20px;
-      width: 400px;
-      height: 50px;
-      margin: 20px auto;
+      width: 500px;
+      height: 70px;
+      margin: 20px 0;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 24px;
       text-align: center;
       }
+      #pymol-control-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+      }
+      #pymol-control-area > * {
+        margin: 5px;
+      }
     </style>
   </head>
   <body>
     <canvas id="canvas" width="1024" height="600"></canvas>
-    <div id="drop-area1">Drag and drop pdb file here, or click to select pdb file</div>
-    <center><button id="my-button">Press here to launch PyMOL after selecting PDB file</button></center>
-    <center><button id="ray-button">Press here to ray</button></center>    
+    <div id="load-pdb-area">
+        <div id="drop-area1">Drag and drop pdb file here, or click to select pdb file</div>
+        <span class="separator">or</span>
+        <div>
+            <div>
+                <input type="text" id="DBID" placeholder="e.g. 1BDD or AF-P38507-F1">
+                <button type="button" id="fetch-button">load by PDB ID or AFDB ID</button>
+            </div>
+            <span id="load-message"></span>
+        </div>
+    </div>
+    <div id="pymol-control-area">
+        <button id="my-button">Press here to launch PyMOL after selecting PDB file</button>
+        <button id="ray-button">Press here to ray</button>
+    </div>
     <p>
     <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
@@ -175,7 +215,28 @@
 	  }
 	  input.click();
       }
-      
+        const fetchButton = document.getElementById('fetch-button');
+        fetchButton.addEventListener('click', async function(){
+            const DBID = document.getElementById('DBID').value;
+            const loadMessage = document.getElementById('load-message');
+            if (DBID.length == 0) {
+                loadMessage.textContent = 'Please input ID';
+                return;
+            }
+            //https://alphafold.ebi.ac.uk/files/AF-P38507-F1-model_v4.cif
+            const response = DBID.startsWith("AF-")
+                ? await fetch(`https://alphafold.ebi.ac.uk/files/${DBID}-model_v4.cif`)
+                : await fetch(`https://files.rcsb.org/download/${DBID}.cif`);
+            if (!response.ok) {
+                loadMessage.textContent = 'File not found';
+                return;
+            }
+            loadMessage.textContent = '';
+            const content = await response.text();
+            pdb1 = content;
+            filename1 = DBID+".cif";
+            dropArea1.textContent = filename1;
+        });
     </script>
     <script>
       const canvas = document.getElementById('canvas');
