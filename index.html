@@ -258,6 +258,25 @@
       _p.cmd.viewport(width-gui_width,height)
       _p.draw()`
 					      );
+        if (!loaded) {
+            cv.addEventListener('click', onClick);
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mousemove', onMouseMove4Stop);
+            //cv.addEventListener('mousestop', onMouseStop);
+            cv.addEventListener('mousedown', onMouseDown);
+            cv.addEventListener('mouseup', onMouseUp);
+            cv.addEventListener('contextmenu', onContextMenu);
+            //cv.addEventListener('dblclick', onDoubleClick);
+            document.addEventListener('keydown', onKeyDown);
+            document.addEventListener('keyup', onKeyUp);
+            document.addEventListener("wheel", (event) => {
+                if (event.wheelDeltaY < 0) {
+                    onWheelRollUp(event);
+                } else if (event.wheelDeltaY > 0) {
+                    onWheelRollDown(event);
+                }
+            })
+        }
       loaded=true;
 		 
 	      } catch (error) {
@@ -610,24 +629,6 @@
       frameCounter++;
       requestAnimationFrame(animate);
       }
-    
-      cv.addEventListener('click', onClick);
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mousemove', onMouseMove4Stop);
-      //cv.addEventListener('mousestop', onMouseStop);
-      cv.addEventListener('mousedown', onMouseDown);
-      cv.addEventListener('mouseup', onMouseUp);
-      cv.addEventListener('contextmenu', onContextMenu);
-      //cv.addEventListener('dblclick', onDoubleClick);
-      document.addEventListener('keydown', onKeyDown);
-      document.addEventListener('keyup', onKeyUp);
-      document.addEventListener("wheel", (event) => {
-          if (event.wheelDeltaY < 0) {
-              onWheelRollUp(event);
-          } else if (event.wheelDeltaY > 0) {
-              onWheelRollDown(event);
-          }
-      })
 
        let mouseStop=false
        let mouseStopTimeout;
