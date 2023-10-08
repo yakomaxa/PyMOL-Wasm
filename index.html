@@ -295,7 +295,9 @@
 	      try {
 		  await pyodide.FS.writeFile(filename1, pdb1);
 		  await pyodide.globals.set("fname1",filename1);
-		  await pyodide.runPythonAsync(`
+
+        if (!loaded) {
+            await pyodide.runPythonAsync(`
       _p.cmd.load(fname1)
       _p.cmd.set("label_font_id", 10)
       _p.cmd.set("label_size", 30)
@@ -319,7 +321,6 @@
       _p.cmd.viewport(width-gui_width,height)
       _p.draw()`
 					      );
-        if (!loaded) {
             cv.addEventListener('click', onClick);
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mousemove', onMouseMove4Stop);
@@ -337,6 +338,10 @@
                     onWheelRollDown(event);
                 }
             })
+        } else {
+            await pyodide.runPythonAsync(`
+                _p.cmd.load(fname1)
+            `);
         }
       loaded=true;
 		 
