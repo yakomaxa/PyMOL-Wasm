@@ -225,7 +225,9 @@
       _p.start()
       
       import pymol.util
+      import pymol.preset
       _p.util = SelfProxy(pymol.util, _p.cmd)
+      _p.preset = SelfProxy(pymol.preset, _p.cmd)
       _p.cmd.set("internal_gui",1)
       _p.cmd.set("internal_feedback", 1)
       _p.cmd.bg_color("black")
@@ -598,7 +600,6 @@
       return;
       }	// Update the animation here
 	await  pyodide.runPythonAsync(`
-      _p.cmd.refresh()
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
@@ -619,7 +620,6 @@
       return;
       }	// Update the animation here
 	await  pyodide.runPythonAsync(`
-      _p.cmd.refresh()
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
