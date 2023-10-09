@@ -491,6 +491,10 @@
       let Dragging=false;
       async function onMouseDown(event) {
       event.preventDefault();
+
+      frameCounter = 0;                                                                                                                                       
+      requestAnimationFrame(animate)
+      
       if (event.button == 0 ) {
       isLeftButtonDown=true;
       }
@@ -580,7 +584,7 @@
       `)
       }
 
-      const frameLimit = 2;
+      const frameLimit = 50;
       let frameCounter = 0;
       let animating = false;
       
