@@ -491,9 +491,6 @@
       let Dragging=false;
       async function onMouseDown(event) {
       event.preventDefault();
-
-      frameCounter = 0;                                                                                                                                       
-      requestAnimationFrame(animate)
       
       if (event.button == 0 ) {
       isLeftButtonDown=true;
@@ -508,6 +505,10 @@
       
       async function onMouseUp(event) {
       event.preventDefault();
+	frameCounter2 = 0;
+	animating2 = true;
+	animate2()
+
       if (event.button == 0) {
       isLeftButtonDown=false;
       }
@@ -584,11 +585,14 @@
       `)
       }
 
-      const frameLimit = 50;
-      let frameCounter = 0;
-      let animating = false;
+	let frameLimit = 2;
+	let frameCounter = 0;
+	let frameCounter2 = 0;
+	let animating = false;
+	let animating2 = false;
       
       async function animate() {
+//       console.log("ANimating01")	
       if (frameCounter >= frameLimit) {
       animating = false;
       return;
@@ -607,6 +611,29 @@
       frameCounter++;
       requestAnimationFrame(animate);
       }
+
+      async function animate2() {
+//	console.log("ANimating02")	
+      if (frameCounter2 >= 30) {
+      animating2 = false;
+      return;
+      }	// Update the animation here
+	await  pyodide.runPythonAsync(`
+      _p.cmd.refresh()
+      _p.idle()
+      _p._cmd.glViewport(0, 0, width,height)
+      _p.cmd.viewport(width-gui_width,height)
+      _p.idle()
+      _p.draw()
+	
+	`);
+      
+      
+      frameCounter2++;
+      requestAnimationFrame(animate2);
+      }
+	
+	
     
       cv.addEventListener('click', onClick);
       document.addEventListener('mousemove', onMouseMove);
