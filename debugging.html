@@ -556,6 +556,7 @@
       }
 
       let clickcount=0;
+
       async function onClick(event) {
       event.preventDefault();
       if (!mouseStop){
@@ -566,7 +567,41 @@
 	  await pyodide.globals.set("x",mouseX);
 	  await pyodide.globals.set("y",mouseY);
 
+      setTimeout(async () => {
 	  await  pyodide.runPythonAsync(`
+      _p.button(0, 0, int(x), int(height - y), 0)
+      _p.idle()
+      _p.drag(x, height-y, 0)
+      _p.idle()
+      _p._cmd.glViewport(0, 0, width,height)
+      _p.cmd.viewport(width-gui_width,height)
+      _p.idle()
+      _p.draw()
+      _p.button(0, 1, int(x), int(height - y), 0)
+      _p.idle()
+      _p.drag(x, height-y, 0)
+      _p.idle()     
+      _p._cmd.glViewport(0, 0, width,height)
+      _p.cmd.viewport(width-gui_width,height)
+      _p.idle()
+      _p.draw()
+      _p.idle()
+      `),100})
+      }
+
+
+      async function onDoubleClick(event) {
+      event.preventDefault();
+      if (!mouseStop){
+      return;
+      }
+	  var mouseX = event.clientX - OriginX;
+	  var mouseY = event.clientY - OriginY;
+	  await pyodide.globals.set("x",mouseX);
+	  await pyodide.globals.set("y",mouseY);
+
+
+      	  await  pyodide.runPythonAsync(`
       _p.button(0, 0, int(x), int(height - y), 0)
       _p.idle()
       _p.drag(x, height-y, 0)
@@ -600,6 +635,7 @@
       return;
       }	// Update the animation here
 	await  pyodide.runPythonAsync(`
+      _p.cmd.refresh()
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
@@ -615,11 +651,12 @@
 
       async function animate2() {
       console.log("ANimating02")	
-      if (frameCounter2 >= 30) {
+      if (frameCounter2 >= 50) {
       animating2 = false;
       return;
       }	// Update the animation here
 	await  pyodide.runPythonAsync(`
+      _p.cmd.refresh()
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
@@ -642,7 +679,7 @@
       cv.addEventListener('mousedown', onMouseDown);
       cv.addEventListener('mouseup', onMouseUp);
       cv.addEventListener('contextmenu', onContextMenu);
-      //cv.addEventListener('dblclick', onDoubleClick);
+      cv.addEventListener('dblclick', onDoubleClick);
       document.addEventListener('keydown', onKeyDown);
       document.addEventListener('keyup', onKeyUp);
       document.addEventListener("wheel", (event) => {
