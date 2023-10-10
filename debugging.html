@@ -248,9 +248,9 @@
     </script>
     <script type="module">
       const cv = document.getElementById("canvas");
-      const rect = cv.getBoundingClientRect();
-      const OriginX = parseInt(rect.left);
-      const OriginY = parseInt(rect.top);
+      let rect = cv.getBoundingClientRect();
+      let OriginX = parseInt(rect.left);
+      let OriginY = parseInt(rect.top);
       
       let pyodide = await loadPyodide();
       let loaded = false;
@@ -510,8 +510,13 @@
 	  }
           event.preventDefault();
                 
- 	  var key_ctrl_here = ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
-	  
+ 	var key_ctrl_here = ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+
+
+	
+	  let rect = cv.getBoundingClientRect();
+	  let OriginX = parseInt(rect.left);
+	  let OriginY = parseInt(rect.top);
           var mouseX = event.clientX - OriginX;
           var mouseY = event.clientY - OriginY;
           await pyodide.globals.set("x",mouseX);
@@ -654,7 +659,10 @@
       }
       
        async function onWheelRollUp(event) {
-          await event.preventDefault();
+        await event.preventDefault();
+	await pyodide.globals.set("originX",OriginX);
+        await pyodide.globals.set("originY",OriginY);
+
           var mouseX = event.clientX - OriginX;
           var mouseY = event.clientY - OriginY;
           await pyodide.globals.set("x",mouseX);
@@ -672,6 +680,8 @@
       
       async function onWheelRollDown(event) {
           await event.preventDefault();
+          await pyodide.globals.set("originX",OriginX);
+          await pyodide.globals.set("originY",OriginY);
           var mouseX = event.clientX - OriginX;
           var mouseY = event.clientY - OriginY;
           await pyodide.globals.set("x",mouseX);
@@ -691,7 +701,9 @@
       event.preventDefault();
       if (!mouseStop){
       return;
-      }
+	}
+      await pyodide.globals.set("originX",OriginX);
+      await pyodide.globals.set("originY",OriginY);
       var mouseX = event.clientX - OriginX;
       var mouseY = event.clientY - OriginY;
       await pyodide.globals.set("x",mouseX);
