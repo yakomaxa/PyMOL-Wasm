@@ -701,8 +701,12 @@
       _p.draw()
 	`);
 	
+      frameCounter++;
+      requestAnimationFrame(animate);
+      }
+
       async function animateLong() {
-      if (frameCounter >= frameLimitLong) {
+      if (frameCounterLong >= frameLimitLong) {
       animatingLong = false;
       return;
       }
@@ -721,9 +725,8 @@
       }
      
 
-      frameCounter++;
-      requestAnimationFrame(animate);
-      }
+
+	  
 
        let mouseStop=false
        let mouseStopTimeout;
