@@ -280,6 +280,8 @@
       
       import pymol.util
       _p.util = SelfProxy(pymol.util, _p.cmd)
+      import pymol.preset
+      _p.preset = SelfProxy(pymol.preset, _p.cmd)
       _p.cmd.set("internal_gui",1)
       _p.cmd.set("internal_feedback", 1)
       _p.cmd.bg_color("black")
