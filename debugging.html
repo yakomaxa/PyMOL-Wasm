@@ -660,6 +660,11 @@
       
        async function onWheelRollUp(event) {
         await event.preventDefault();
+
+	let rect = cv.getBoundingClientRect();
+	let OriginX = parseInt(rect.left);
+	let OriginY = parseInt(rect.top);
+	
 	await pyodide.globals.set("originX",OriginX);
         await pyodide.globals.set("originY",OriginY);
 
@@ -679,7 +684,11 @@
       }
       
       async function onWheelRollDown(event) {
-          await event.preventDefault();
+        await event.preventDefault();
+	let rect = cv.getBoundingClientRect();
+	let OriginX = parseInt(rect.left);
+	let OriginY = parseInt(rect.top);
+	
           await pyodide.globals.set("originX",OriginX);
           await pyodide.globals.set("originY",OriginY);
           var mouseX = event.clientX - OriginX;
@@ -702,6 +711,9 @@
       if (!mouseStop){
       return;
 	}
+     let rect = cv.getBoundingClientRect();
+     let OriginX = parseInt(rect.left);
+     let OriginY = parseInt(rect.top);
       await pyodide.globals.set("originX",OriginX);
       await pyodide.globals.set("originY",OriginY);
       var mouseX = event.clientX - OriginX;
