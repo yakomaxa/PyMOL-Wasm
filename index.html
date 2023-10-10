@@ -246,15 +246,12 @@
             dropArea1.textContent = filename1;
         });
     </script>
-    <script>
-      const canvas = document.getElementById('canvas');
-      const rect = canvas.getBoundingClientRect();
-      const OriginX = parseInt(rect.left);
-      const OriginY = parseInt(rect.top);
-    </script>
     <script type="module">
       const cv = document.getElementById("canvas");
-      //import { loadPyodide} from "./dist/pyodide.mjs";
+      const rect = cv.getBoundingClientRect();
+      const OriginX = parseInt(rect.left);
+      const OriginY = parseInt(rect.top);
+      
       let pyodide = await loadPyodide();
       let loaded = false;
       await pyodide.loadPackage("https://yakomaxa.github.io/PyMOL-Wasm/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
@@ -284,6 +281,11 @@
       
       import pymol2 as p2
       _p = p2.PyMOL()
+
+      # need for letting wizarding.py or something to recognize the PyMOL instance
+      import pymol  
+      pymol.cmd = _p.cmd
+
       _p.start()
       
       import pymol.util
@@ -759,10 +761,7 @@
       frameCounterLong++;
       requestAnimationFrame(animateLong);
       }
-     
-
-
-	  
+    	  
 
        let mouseStop=false
        let mouseStopTimeout;
@@ -776,6 +775,30 @@
 	mouseStop=true;
 	}, 100); // Adjust the delay as needed
 	}
+
+        // To take input for wizard (especially renaming)
+	document.addEventListener('keydown', async function(event) {
+	    event.preventDefault();
+	    let key = event.key;
+	    let keyCode = null;
+            if (event.shiftKey && key.length === 1) {
+		keyCode = key.toUpperCase().charCodeAt(0);
+	    } else if(key.length === 1){
+		keyCode = key.toLowerCase().charCodeAt(0);
+	    } else {
+		keyCode = event.keyCode;
+	    }
+          await pyodide.globals.set('keyCode',keyCode)
+	  await  pyodide.runPythonAsync(`
+           wiz = _p.cmd.get_wizard()
+           if (wiz != None):
+            wiz.do_key(keyCode,0,0,0)            
+        `)
+	    frameCounterLong = 0;
+	    animatingLong = true;
+	    animateLong()
+	});
+
 
       
     </script>
