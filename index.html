@@ -331,7 +331,7 @@
             //cv.addEventListener('dblclick', onDoubleClick);
             document.addEventListener('keydown', onKeyDown);
             document.addEventListener('keyup', onKeyUp);
-            document.addEventListener("wheel", (event) => {
+            cv.addEventListener("wheel", (event) => {
                 if (event.wheelDeltaY < 0) {
                     onWheelRollUp(event);
                 } else if (event.wheelDeltaY > 0) {
@@ -598,6 +598,10 @@
       
       async function onMouseUp(event) {
       event.preventDefault();
+      frameCounterLong = 0;
+      animatingLong = true;
+      animateLong()
+      
       if (event.button == 0) {
       isLeftButtonDown=false;
       }
@@ -610,7 +614,7 @@
       }
       
        async function onWheelRollUp(event) {
-          //await event.preventDefault();
+          await event.preventDefault();
           var mouseX = event.clientX - OriginX;
           var mouseY = event.clientY - OriginY;
           await pyodide.globals.set("x",mouseX);
@@ -627,7 +631,7 @@
       }
       
       async function onWheelRollDown(event) {
-          //await event.preventDefault();
+          await event.preventDefault();
           var mouseX = event.clientX - OriginX;
           var mouseY = event.clientY - OriginY;
           await pyodide.globals.set("x",mouseX);
@@ -677,6 +681,10 @@
       let frameCounter = 0;
       let animating = false;
 
+      const frameLimitLong = 50;
+      let frameCounterLong = 0;
+      let animatingLong = false;
+
       async function animate() {
       if (frameCounter >= frameLimit) {
       animating = false;
@@ -689,7 +697,26 @@
       _p.cmd.viewport(width-gui_width,height)
       _p.idle()
       _p.draw()
+	`);
+	
+      async function animateLong() {
+      if (frameCounter >= frameLimitLong) {
+      animatingLong = false;
+      return;
+      }
+
+      // Update the animation here
+      await  pyodide.runPythonAsync(`
+      _p._cmd.glViewport(0, 0, width,height)
+      _p.cmd.viewport(width-gui_width,height)
+      _p.idle()
+      _p.draw()
       `);
+     
+
+      frameCounterLong++;
+      requestAnimationFrame(animateLong);
+      }
      
 
       frameCounter++;
