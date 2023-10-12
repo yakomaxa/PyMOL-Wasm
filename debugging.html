@@ -712,7 +712,12 @@
 
       let clickcount=0;
       async function onClick(event) {
-      event.preventDefault();
+
+	event.preventDefault();
+	frameCounterLong = 0;
+	animatingLong = true;
+	animateLong()
+
       if (!mouseStop){
       return;
 	}
@@ -746,7 +751,7 @@
       `)
       }
 
-      const frameLimit = 5;
+      const frameLimit = 2;
       let frameCounter = 0;
       let animating = false;
 
