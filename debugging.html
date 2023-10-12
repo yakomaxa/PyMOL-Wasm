@@ -629,7 +629,12 @@
       let isRightButtonDown = false;
       let Dragging=false;
       async function onMouseDown(event) {
+
       event.preventDefault();
+      frameCounterLong = 0;
+      animatingLong = true;
+      animateLong()
+      
       if (event.button == 0 ) {
       isLeftButtonDown=true;
       }
