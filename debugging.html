@@ -629,7 +629,7 @@
       let isRightButtonDown = false;
       let Dragging=false;
       async function onMouseDown(event) {
-      
+        event.preventDefault();
       if (event.button == 0 ) {
       isLeftButtonDown=true;
       }
@@ -644,13 +644,13 @@
         Left(0);
       }
       
-      event.preventDefault();
       frameCounterLong = 0;
       animatingLong = true;
       animateLong()
       }
       
-      async function onMouseUp(event) {      
+	async function onMouseUp(event) {
+	event.preventDefault();
       if (event.button == 0) {
       isLeftButtonDown=false;
       }
@@ -663,7 +663,6 @@
       if (mouseStop){
         Left(1);
       }
-      event.preventDefault();
       frameCounterLong = 0;
       animatingLong = true;
       animateLong()
