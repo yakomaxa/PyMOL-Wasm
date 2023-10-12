@@ -629,11 +629,6 @@
       let isRightButtonDown = false;
       let Dragging=false;
       async function onMouseDown(event) {
-
-      event.preventDefault();
-      frameCounterLong = 0;
-      animatingLong = true;
-      animateLong()
       
       if (event.button == 0 ) {
       isLeftButtonDown=true;
@@ -643,7 +638,11 @@
       }
       if (event.button == 2) {
       isRightButtonDown=true;
-      }
+	}
+	event.preventDefault();
+	frameCounterLong = 0;
+	animatingLong = true;
+	animateLong()
       }
       
       async function onMouseUp(event) {
@@ -712,11 +711,6 @@
 
       let clickcount=0;
       async function onClick(event) {
-
-	event.preventDefault();
-	frameCounterLong = 0;
-	animatingLong = true;
-	animateLong()
 
       if (!mouseStop){
       return;
