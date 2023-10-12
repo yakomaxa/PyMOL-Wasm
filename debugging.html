@@ -335,11 +335,9 @@
 					      );
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mousemove', onMouseMove4Stop);
-            //cv.addEventListener('mousestop', onMouseStop);
             cv.addEventListener('mousedown', onMouseDown);
             cv.addEventListener('mouseup', onMouseUp);
             cv.addEventListener('contextmenu', onContextMenu);
-            //cv.addEventListener('dblclick', onDoubleClick);
             document.addEventListener('keydown', onKeyDown);
             document.addEventListener('keyup', onKeyUp);
             cv.addEventListener("wheel", (event) => {
@@ -771,7 +769,7 @@
 	mouseStopTimeout = setTimeout(() => {
 	//console.log('Mouse stopped');
 	mouseStop=true;
-	}, 100); // Adjust the delay as needed
+	}, 50); // Adjust the delay as needed
 	}
 
         // To take input for wizard (especially renaming)
