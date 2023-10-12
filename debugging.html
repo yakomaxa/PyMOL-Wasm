@@ -774,7 +774,7 @@
 
         // To take input for wizard (especially renaming)
 	document.addEventListener('keydown', async function(event) {
-	    //event.preventDefault();
+	    event.preventDefault();
 	    let key = event.key;
 	    let keyCode = null;
             if (event.shiftKey && key.length === 1) {
