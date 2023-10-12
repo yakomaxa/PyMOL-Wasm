@@ -714,7 +714,7 @@
 
       if (!mouseStop){
       return;
-	}
+      }
      let rect = cv.getBoundingClientRect();
      let OriginX = parseInt(rect.left);
      let OriginY = parseInt(rect.top);
@@ -727,15 +727,11 @@
       await  pyodide.runPythonAsync(`
       _p.button(0, 0, int(x), int(height - y), 0)
       _p.idle()
-      _p.drag(x, height-y, 0)
-      _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
       _p.idle()
       _p.draw()
-      _p.button(0, 1, int(x-1), int(height - y-1), 0)
-      _p.idle()
-      _p.drag(x, height-y, 0)
+      _p.button(0, 1, int(x), int(height - y), 0)
       _p.idle()     
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
