@@ -638,19 +638,19 @@
       }
       if (event.button == 2) {
       isRightButtonDown=true;
-	}
-	event.preventDefault();
-	frameCounterLong = 0;
-	animatingLong = true;
-	animateLong()
+      }
+
+      if (mouseStop){
+        Left(0);
       }
       
-      async function onMouseUp(event) {
       event.preventDefault();
       frameCounterLong = 0;
       animatingLong = true;
       animateLong()
+      }
       
+      async function onMouseUp(event) {      
       if (event.button == 0) {
       isLeftButtonDown=false;
       }
@@ -660,9 +660,17 @@
       if (event.button == 2) {
       isRightButtonDown=false;
       }
+      if (mouseStop){
+        Left(1);
+      }
+      event.preventDefault();
+      frameCounterLong = 0;
+      animatingLong = true;
+      animateLong()
+
       }
       
-       async function onWheelRollUp(event) {
+      async function onWheelRollUp(event) {
         await event.preventDefault();
 
 	let rect = cv.getBoundingClientRect();
@@ -706,38 +714,6 @@
       _p.cmd.viewport(width-gui_width,height)
       _p.idle()
       _p.draw()
-      `)
-      }
-
-      let clickcount=0;
-      async function onClick(event) {
-
-      if (!mouseStop){
-      return;
-      }
-     let rect = cv.getBoundingClientRect();
-     let OriginX = parseInt(rect.left);
-     let OriginY = parseInt(rect.top);
-      await pyodide.globals.set("originX",OriginX);
-      await pyodide.globals.set("originY",OriginY);
-      var mouseX = event.clientX - OriginX;
-      var mouseY = event.clientY - OriginY;
-      await pyodide.globals.set("x",mouseX);
-      await pyodide.globals.set("y",mouseY);
-      await  pyodide.runPythonAsync(`
-      _p.button(0, 0, int(x), int(height - y), 0)
-      _p.idle()
-      _p._cmd.glViewport(0, 0, width,height)
-      _p.cmd.viewport(width-gui_width,height)
-      _p.idle()
-      _p.draw()
-      _p.button(0, 1, int(x), int(height - y), 0)
-      _p.idle()     
-      _p._cmd.glViewport(0, 0, width,height)
-      _p.cmd.viewport(width-gui_width,height)
-      _p.idle()
-      _p.draw()
-      _p.idle()      
       `)
       }
 
