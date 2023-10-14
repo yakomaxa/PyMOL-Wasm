@@ -350,6 +350,33 @@
                     onWheelRollDown(event);
                 }
             })
+            // To take input for wizard (especially renaming)
+            document.addEventListener('keydown', async function(event) {
+                // prevent capturing keypresses from input fields
+                if (event.target.tagName === "INPUT") {
+                    return;
+                }
+                // calling this will prevent ctrl+ R from reloading the page
+                //event.preventDefault();
+                let key = event.key;
+                let keyCode = null;
+                    if (event.shiftKey && key.length === 1) {
+                keyCode = key.toUpperCase().charCodeAt(0);
+                } else if(key.length === 1){
+                keyCode = key.toLowerCase().charCodeAt(0);
+                } else {
+                keyCode = event.keyCode;
+                }
+                await pyodide.globals.set('keyCode',keyCode)
+                await  pyodide.runPythonAsync(`
+                wiz = _p.cmd.get_wizard()
+                if (wiz != None):
+                    wiz.do_key(keyCode,0,0,0)            
+                `)
+                frameCounterLong = 0;
+                animatingLong = true;
+                animateLong()
+            });
         } else {
             await pyodide.runPythonAsync(`
                 _p.cmd.load(fname1)
@@ -799,32 +826,6 @@
 	mouseStop=true;
 	}, 100); // Adjust the delay as needed
 	}
-
-        // To take input for wizard (especially renaming)
-	document.addEventListener('keydown', async function(event) {
-	    //event.preventDefault();
-	    let key = event.key;
-	    let keyCode = null;
-            if (event.shiftKey && key.length === 1) {
-		keyCode = key.toUpperCase().charCodeAt(0);
-	    } else if(key.length === 1){
-		keyCode = key.toLowerCase().charCodeAt(0);
-	    } else {
-		keyCode = event.keyCode;
-	    }
-          await pyodide.globals.set('keyCode',keyCode)
-	  await  pyodide.runPythonAsync(`
-           wiz = _p.cmd.get_wizard()
-           if (wiz != None):
-            wiz.do_key(keyCode,0,0,0)            
-        `)
-	    frameCounterLong = 0;
-	    animatingLong = true;
-	    animateLong()
-	});
-
-
-      
     </script>
    <center> <a href="https://github.com/yakomaxa/PyMOL-Wasm"> GitHub repository for this project (binary and javascript only at this moment) </a>  </center>
   </body>
