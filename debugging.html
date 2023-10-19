@@ -251,10 +251,11 @@
       let rect = cv.getBoundingClientRect();
       let OriginX = parseInt(rect.left);
       let OriginY = parseInt(rect.top);
-      
+      let mod = 0;
       let pyodide = await loadPyodide();
       let loaded = false;
       await pyodide.loadPackage("https://yakomaxa.github.io/PyMOL-Wasm/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
+      //await pyodide.loadPackage("./dist/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
       // Run PyMOL code
       const width = 1024;
       const height = 600;
@@ -357,7 +358,7 @@
                 //event.preventDefault();
                 let key = event.key;
                 let keyCode = null;
-                    if (event.shiftKey && key.length === 1) {
+                if (event.shiftKey && key.length === 1) {
                 keyCode = key.toUpperCase().charCodeAt(0);
                 } else if(key.length === 1){
                 keyCode = key.toLowerCase().charCodeAt(0);
@@ -461,7 +462,6 @@
 	});
        
 
-     
       let lastMouseX = null;
       let lastMouseY = null;
       let mouseStoppedTimeout = null;
@@ -471,61 +471,67 @@
       let leftButtonCallNum_ctrl = 0;
       let mouseButtonDown = false;
       let key_ctrl = false;
+      let key_shift = false;
       var goLeftDown=false;
       
       async function onKeyDown(event){
-	  key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+	key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+	key_shift =  event.shiftKey
       }
 
       async function onKeyUp(event){
-	  key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+	key_ctrl =  ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
+	key_shift =  event.shiftKey
       }
 
 
 
-      async function Left(flag){
-      if (flag==0){
-      //console.log("Left reserved");
-      await  pyodide.runPythonAsync( `
-      _p.button(0, 0, int(x), int(height - y), 0)
-      `);
-      if (!animating) {
-      animatingLong = true;
-      frameCounterLong = 0;
-      animateLong();
+      async function Left(flag,mod){
+	await pyodide.globals.set("mod",mod);
+	if (flag==0){
+	//console.log("Left reserved");
+	await  pyodide.runPythonAsync( `
+	_p.button(0, 0, int(x), int(height - y), mod)
+	`);
+	if (!animating) {
+	animatingLong = true;
+	frameCounterLong = 0;
+	animateLong();
+	}
+	
+	}else{
+        //console.log("Left unlocked");      
+	await  pyodide.runPythonAsync(      `
+	_p.button(0, 1, int(x), int(height - y), mod)
+	`);
+	if (!animating) {
+	animatingLong = true;
+	frameCounterLong = 0;
+	animateLong();
       }
-
-	  }else{
-              //console.log("Left unlocked");      
-      await  pyodide.runPythonAsync(      `
-      _p.button(0, 1, int(x), int(height - y), 0)
-      `);
-      if (!animating) {
-      animatingLong = true;
-      frameCounterLong = 0;
-      animateLong();
-      }
-
+	
 	  }	    
       }
 
-      async function Right(flag){
+	async function Right(flag,mod){
+    	  await pyodide.globals.set("mod",mod);
 	  if (flag==0){
 	      //console.log("Right reserved");
-	      await  pyodide.runPythonAsync( `_p.button(2, 0, int(x), int(height - y), 0)`);
+	      await  pyodide.runPythonAsync( `_p.button(2, 0, int(x), int(height - y),mod)`);
 	  }else{
 	      //console.log("Right unlocked");
-	      await  pyodide.runPythonAsync( `_p.button(2, 1, int(x), int(height - y), 0)`);
+	      await  pyodide.runPythonAsync( `_p.button(2, 1, int(x), int(height - y), mod)`);
 	  }	    
       }
 
-      async function Middle(flag){
+	async function Middle(flag,mod){
+    	  await pyodide.globals.set("mod",mod);
 	  if (flag==0){
 	      //console.log("Middle reserved");
-	      await  pyodide.runPythonAsync( `_p.button(1, 0, int(x), int(height - y), 0)`);
+	      await  pyodide.runPythonAsync( `_p.button(1, 0, int(x), int(height - y), mod)`);
 	  }else{
 	      //console.log("Middle unlocked");
-	      await  pyodide.runPythonAsync( `_p.button(1, 1, int(x), int(height - y), 0)`);
+	      await  pyodide.runPythonAsync( `_p.button(1, 1, int(x), int(height - y), mod)`);
 	  }	   
       }
       async function onMouseMove(event) {
@@ -535,8 +541,7 @@
           event.preventDefault();
                 
  	var key_ctrl_here = ((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey));
-
-
+	var key_shift_here = event.shiftKey
 	
 	  let rect = cv.getBoundingClientRect();
 	  let OriginX = parseInt(rect.left);
@@ -557,13 +562,20 @@
 	  }
 
 
+
+       if (event.shiftKey){
+ 	mod = 1;
+       }else{
+	mod = 0;
+	}
+      await pyodide.globals.set("mod",mod);
       // set left button ON
       if ((isLeftButtonDown && !( key_ctrl_here) && leftButtonCallNum == 0) ) {
 	      //console.log("AA begin")
 	      if (middleButtonCallNum==1){
-		  Middle(1);
+		  Middle(1,mod);
 	      }
-	      Left(0);
+	      Left(0,mod);
 	      mouseButtonDown=true;
 	      leftButtonCallNum = 1;
 	      middleButtonCallNum = 0;
@@ -571,7 +583,7 @@
 	  } // OFF
 	  if (!isLeftButtonDown && !(key_ctrl_here)  && leftButtonCallNum == 1){
 	      //console.log("BB begin")
-	      Left(1);
+	      Left(1,mod);
 	      mouseButtonDown=false;
 	      leftButtonCallNum = 0;
 	      middleButtonCallNum = 0;
@@ -582,9 +594,9 @@
 	  if (isMiddleButtonDown && middleButtonCallNum == 0 || isMiddleButtonDown_real && middleButtonCallNum == 0){
 	      console.log("CC begin");
 	      if (leftButtonCallNum==1){
-		  Left(1);
+		  Left(1,mod);
 	      }
-	      Middle(0);
+	      Middle(0,mod);
 	      mouseButtonDown=true;
 	      middleButtonCallNum = 1
 	      leftButtonCallNum = 0;
@@ -592,7 +604,7 @@
 	  } // OFF
          if ((!isMiddleButtonDown && middleButtonCallNum == 1) && (!isMiddleButtonDown_real && middleButtonCallNum == 1)){
 	      console.log("DD begin");
-	      Middle(1);
+	      Middle(1,mod);
 	      mouseButtonDown=false;
 	      middleButtonCallNum = 0;
 	      leftButtonCallNum = 0;
@@ -602,14 +614,14 @@
 	  // set right button ON
 	  if (isRightButtonDown && rightButtonCallNum == 0){
 	      //console.log("EE begin");
-	      Right(0);
+	      Right(0,mod);
 	      mouseButtonDown=true;
 	      rightButtonCallNum = 1
 	      //console.log("EE end");
 	  }
 	  if ((!isRightButtonDown && rightButtonCallNum == 1)){
 	      //console.log("FF begin");
-	      Right(1);
+	      Right(1,mod);
 	      mouseButtonDown=false;
 	      rightButtonCallNum = 0;
 	      //console.log("FF end");
@@ -619,10 +631,10 @@
            Dragging=true
        }
       if (Dragging){
-      await pyodide.runPythonAsync(`
-      _p.idle()
-      _p.drag(x, height-y, 0)
-      `);
+       await pyodide.runPythonAsync(`
+       _p.idle()
+       _p.drag(x, height-y, mod)
+       `);
       }else{
     
       }
@@ -652,8 +664,9 @@
       let isMiddleButtonDown_real = false;
       let isRightButtonDown = false;
       let Dragging=false;
+	
       async function onMouseDown(event) {
-        event.preventDefault();
+      event.preventDefault();
       if (event.button == 0 ) {
       isLeftButtonDown=true;
       }
@@ -662,10 +675,15 @@
       }
       if (event.button == 2) {
       isRightButtonDown=true;
-      }
-
-      if (mouseStop){
-        Left(0);
+       }
+	if (event.shiftKey){
+	mod=1
+	}else{
+	mod=0
+	}
+      await pyodide.globals.set("mod",mod);
+      if (mouseStop){	
+        Left(0,mod);
       }
       
       frameCounterLong = 0;
@@ -673,8 +691,14 @@
       animateLong()
       }
       
-	async function onMouseUp(event) {
+      async function onMouseUp(event) {
 	event.preventDefault();
+	if (event.shiftKey){
+	mod=1
+	}else{
+	mod=0
+	}
+      await pyodide.globals.set("mod",mod);
       if (event.button == 0) {
       isLeftButtonDown=false;
       }
@@ -685,7 +709,7 @@
       isRightButtonDown=false;
       }
       if (mouseStop){
-        Left(1);
+        Left(1,mod);
       }
       frameCounterLong = 0;
       animatingLong = true;
@@ -706,10 +730,11 @@
           var mouseX = event.clientX - OriginX;
           var mouseY = event.clientY - OriginY;
           await pyodide.globals.set("x",mouseX);
-          await pyodide.globals.set("y",mouseY);          
+        await pyodide.globals.set("y",mouseY);
+	await pyodide.globals.set("mod",mod);          
 
           await  pyodide.runPythonAsync(`
-      _p.button(4, 0, int(x), int(height - y), 0)
+      _p.button(4, 0, int(x), int(height - y), mod)
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
@@ -724,14 +749,15 @@
 	let OriginX = parseInt(rect.left);
 	let OriginY = parseInt(rect.top);
 	
-          await pyodide.globals.set("originX",OriginX);
-          await pyodide.globals.set("originY",OriginY);
+        await pyodide.globals.set("originX",OriginX);
+        await pyodide.globals.set("originY",OriginY);
+	await pyodide.globals.set("mod",mod);
           var mouseX = event.clientX - OriginX;
           var mouseY = event.clientY - OriginY;
           await pyodide.globals.set("x",mouseX);
           await pyodide.globals.set("y",mouseY);          
           await  pyodide.runPythonAsync(`
-      _p.button(3, 0, int(x), int(height - y), 0)
+      _p.button(3, 0, int(x), int(height - y), mod)
       _p.idle()
       _p._cmd.glViewport(0, 0, width,height)
       _p.cmd.viewport(width-gui_width,height)
@@ -796,7 +822,7 @@
 	mouseStopTimeout = setTimeout(() => {
 	//console.log('Mouse stopped');
 	mouseStop=true;
-	}, 30); // Adjust the delay as needed
+	}, 100); // Adjust the delay as needed
 	}
     </script>
    <center> <a href="https://github.com/yakomaxa/PyMOL-Wasm"> GitHub repository for this project (binary and javascript only at this moment) </a>  </center>
