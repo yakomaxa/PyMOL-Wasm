@@ -81,6 +81,7 @@
     <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
     <script>
+      let inputFiles=[];
       let pdb1="";
       let filename1="dummy1.pdb";
       const dropArea1 = document.getElementById('drop-area1');
@@ -107,11 +108,10 @@
 	  event.preventDefault();
       dropArea1.style.background = '#eee';
       }
-      function handleDrop1(event) {
-	  event.stopPropagation();
-	  event.preventDefault();
-	  dropArea1.style.background = '#fff';
-	  const file = event.dataTransfer.files[0];
+      async function readFile(file) {
+        let pdb1 = null;
+        let filename1 = null;
+        return new Promise((resolve, reject) => {
 	  const reader = new FileReader();
 	  // Check if the file name ends with ".gz"
 	  if (file.name.endsWith('.gz')) {
@@ -125,12 +125,11 @@
 		  // Store the decompressed data
 		  pdb1 = decompressed;
 		  filename1 = file.name.replace("\.gz","");
+          resolve({ pdb1, filename1 });
 	      };
 	      // Read the file as an array buffer
 	      reader.readAsArrayBuffer(file);
-	  }else{
-	      if (file.name.endsWith('.pse')){		  
-                  if (file) {
+	  } else if (file.name.endsWith('.pse')){		  
                       const fileReader = new FileReader();		      
                       // Read the file as an ArrayBuffe		      
                       fileReader.onload = () => {
@@ -138,10 +137,10 @@
                           // Convert the ArrayBuffer to a Uint8Array
                           pdb1 = new Uint8Array(arrayBuffer);
                           filename1 = file.name
+                          resolve({ pdb1, filename1 });
                           // Write the binary data to the Pyodide virtual file system
 		      }
 		      fileReader.readAsArrayBuffer(file);
-                  }
 		  // Read the file as an array buffer		  
 	      }else{
 		  reader.onload = function (event) {
@@ -153,73 +152,32 @@
 		      // Store the file contents
 		      pdb1 = content;
 		      filename1 = file.name
+              resolve({ pdb1, filename1 });
 		  };
 		  
 		  // Read the file as text
 		  reader.readAsText(file);
 	      }
-	  }
-	dropArea1.textContent = file.name;
+        });
+      }
+      async function handleDrop1(event) {
+	  event.stopPropagation();
+	  event.preventDefault();
+	  dropArea1.style.background = '#fff';
+	  inputFiles = await Promise.all(Array.from(event.dataTransfer.files).map((file) => readFile(file)));
+      filename1 = inputFiles[0].filename1;
+	dropArea1.textContent = inputFiles.map((obj)=>obj.filename1).join();
       }
       
 
       function handleClick1(event) {
 	  const input = document.createElement('input');
 	  input.type = 'file';
-	  input.onchange = function (event) {
-	      const file = event.target.files[0];
-	      const reader = new FileReader();
-	      
-	      // Check if the file name ends with ".gz"
-	      if (file.name.endsWith('.gz')) {
-		  reader.onload = function (event) {
-		      const compressedData = event.target.result;
-		      
-		      // Decompress the data using Pako
-		      const decompressed = pako.inflate(compressedData, { to: 'string' });
-		      ////console.log(decompressed);
-		      
-		      // Store the decompressed data
-		      pdb1 = decompressed;
-		      filename1 = file.name.replace("\.gz","");
-		  };
-		  
-		  // Read the file as an array buffer
-		  reader.readAsArrayBuffer(file);
-	      }else{
-	if (file.name.endsWith('.pse')) {
-	                  if (file) {
-                      const fileReader = new FileReader();		      
-                      // Read the file as an ArrayBuffe
-		      
-                      fileReader.onload = () => {
-                          const arrayBuffer = fileReader.result;
-                          // Convert the ArrayBuffer to a Uint8Array
-                          pdb1 = new Uint8Array(arrayBuffer);
-                          filename1 = file.name
-                          // Write the binary data to the Pyodide virtual file system
-		      }
-		      fileReader.readAsArrayBuffer(file);
-                  }
-
-		  }else{
-		      reader.onload = function (event) {
-			  const content = event.target.result;
-			  
-			  // Output the file contents to the ////console
-			  ////console.log(content);
-			  
-			  // Store the file contents
-			  pdb1 = content;
-			  filename1 = file.name
-		      };
-		      
-		      // Read the file as text
-		      reader.readAsText(file);
-		  }
-		  
-	      }
-	      dropArea1.textContent = file.name;
+      input.multiple = true;
+	  input.onchange = async function (event) {
+	      inputFiles = await Promise.all(Array.from(event.target.files).map((file) => readFile(file)));
+          filename1 = inputFiles[0].filename1;
+	      dropArea1.textContent = inputFiles.map((obj)=>obj.filename1).join();
 	  }
 	  input.click();
       }
@@ -243,6 +201,7 @@
             const content = await response.text();
             pdb1 = content;
             filename1 = DBID+".cif";
+            inputFiles = [{ pdb1, filename1 }];
             dropArea1.textContent = filename1;
         });
     </script>
@@ -305,12 +264,14 @@
       myButton.addEventListener('click', async function(){
 	  setTimeout(async () => {
 	      try {
+           for (const { pdb1, filename1 } of inputFiles) {
 		  await pyodide.FS.writeFile(filename1, pdb1);
-		  await pyodide.globals.set("fname1",filename1);
-
+            await pyodide.runPythonAsync(`
+            _p.cmd.load("${filename1}")
+            `);
+           }
         if (!loaded) {
             await pyodide.runPythonAsync(`
-      _p.cmd.load(fname1)
       _p.cmd.set("label_font_id", 10)
       _p.cmd.set("label_size", 30)
       _p.cmd.set("sphere_mode", 0)
@@ -377,10 +338,6 @@
                 animatingLong = true;
                 animateLong()
             });
-        } else {
-            await pyodide.runPythonAsync(`
-                _p.cmd.load(fname1)
-            `);
         }
       loaded=true;
 		 
