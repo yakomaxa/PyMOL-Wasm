@@ -286,7 +286,7 @@
       const width = 1024;
       const height = 600;
       const gui_width= 220;
-      async function loadPyMOL(params) {
+      async function loadPyMOL() {
       const pyodide = await loadPyodide();
       await pyodide.loadPackage("https://yakomaxa.github.io/PyMOL-Wasm/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
       // Run PyMOL code
