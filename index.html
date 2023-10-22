@@ -7,17 +7,34 @@
     #canvas {
         display: block;
         margin: 0 auto;
+        border:1px solid black;
     }
     </style>
     <style>
 
-    .loading{ 
+    #loading-container {
+    position: relative;
+    width:150px;
+    height:150px;
+    margin: 100px;
+    }
+    #loading{ 
+    position:absolute;
+    transform:translate(-50%,-50%);
     border:4px solid #E5EDFF;
     border-left-color:#f39c12;
     border-radius:50%;
-    width:100px;
-    height:100px;
+    width:90%;
+    height:90%;
     animation:spinner1 1.2s linear infinite
+    }
+    #loading-progress{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:20px;
+    color:#f39c12;
     }
 
     @keyframes spinner1{
@@ -83,7 +100,7 @@
     </style>
   </head>
   <body>
-    <div class="loading"></div>
+    <div id="loading-container"><div id="loading"></div><span id="loading-progress">0%</span></div>
     <div id="main-content">
     <canvas id="canvas" width="1024" height="600"></canvas>
     <div id="load-pdb-area">
@@ -287,8 +304,11 @@
       const height = 600;
       const gui_width= 220;
       async function loadPyMOL() {
+      const loadingProgress = document.getElementById('loading-progress');
       const pyodide = await loadPyodide();
+      loadingProgress.textContent = '50%';
       await pyodide.loadPackage("https://yakomaxa.github.io/PyMOL-Wasm/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
+      loadingProgress.textContent = '75%';
       // Run PyMOL code
       await pyodide.globals.set("originX",OriginX);
       await pyodide.globals.set("originY",OriginY);
@@ -333,7 +353,7 @@
 				  );
 
       document.getElementById("main-content").style.display = "block";
-      document.getElementsByClassName("loading")[0].style.display = "none";
+      document.getElementById("loading-container").style.display = "none";
       const myButton = document.getElementById('my-button');
       myButton.addEventListener('click', async function(){
 	  setTimeout(async () => {
