@@ -286,7 +286,7 @@
       # need for letting wizarding.py or something to recognize the PyMOL instance
       import pymol  
       pymol.cmd = _p.cmd
-      _cmd = _p._cmd
+      pymol._cmd = _p._cmd
 
       _p.start()
       
