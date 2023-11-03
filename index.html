@@ -266,6 +266,7 @@
       async function loadPyMOL() {
       const loadingProgress = document.getElementById('loading-progress');
       const pyodide = await loadPyodide();
+      await pyodide.loadPackage("numpy");
       loadingProgress.textContent = '50%';
       await pyodide.loadPackage("https://yakomaxa.github.io/PyMOL-Wasm/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
       loadingProgress.textContent = '75%';
