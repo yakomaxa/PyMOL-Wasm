@@ -7,9 +7,52 @@
     #canvas {
         display: block;
         margin: 0 auto;
+        border:1px solid black;
     }
     </style>
     <style>
+
+    #loading-container {
+    position: relative;
+    width:150px;
+    height:150px;
+    margin: 100px;
+    }
+    #loading{ 
+    position:absolute;
+    transform:translate(-50%,-50%);
+    border:4px solid #E5EDFF;
+    border-left-color:#f39c12;
+    border-radius:50%;
+    width:90%;
+    height:90%;
+    animation:spinner1 1.2s linear infinite
+    }
+    #loading-progress{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:20px;
+    color:#f39c12;
+    }
+
+    @keyframes spinner1{
+    0%{
+        transform:rotate(0)
+    }
+    100%{
+        transform:rotate(360deg)
+    }
+    }
+      #main-content {
+        display: none;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
       #load-pdb-area {
         display: flex;
         flex-direction: row;
@@ -57,6 +100,8 @@
     </style>
   </head>
   <body>
+    <div id="loading-container"><div id="loading"></div><span id="loading-progress">0%</span></div>
+    <div id="main-content">
     <canvas id="canvas" width="1024" height="600"></canvas>
     <div id="load-pdb-area">
         <div id="drop-area1">Drag and drop pdb file here, or click to select pdb file</div>
@@ -77,7 +122,8 @@
 
     <div id="pymol-console">
       <center><input type="text" id="cmdInput" placeholder="> Enter PyMOL command"></center>
-    </div>      
+    </div>
+    </div>
     <p>
     <script type="module" src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/pako/dist/pako.min.js"></script>
@@ -204,6 +250,8 @@
             filename1 = DBID+".cif";
             inputFiles = [{ pdb1, filename1 }];
             dropArea1.textContent = filename1;
+            const myButton = document.getElementById('my-button');
+            myButton.click();
         });
     </script>
     <script type="module">
@@ -211,14 +259,17 @@
       let rect = cv.getBoundingClientRect();
       let OriginX = parseInt(rect.left);
       let OriginY = parseInt(rect.top);
-      
-      let pyodide = await loadPyodide();
       let loaded = false;
-      await pyodide.loadPackage("https://yakomaxa.github.io/PyMOL-Wasm/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
-      // Run PyMOL code
       const width = 1024;
       const height = 600;
       const gui_width= 220;
+      async function loadPyMOL() {
+      const loadingProgress = document.getElementById('loading-progress');
+      const pyodide = await loadPyodide();
+      loadingProgress.textContent = '50%';
+      await pyodide.loadPackage("https://yakomaxa.github.io/PyMOL-Wasm/pymol-2.6.0a0-cp39-cp39-emscripten_3_1_46_wasm32.whl");
+      loadingProgress.textContent = '75%';
+      // Run PyMOL code
       await pyodide.globals.set("originX",OriginX);
       await pyodide.globals.set("originY",OriginY);
       await pyodide.globals.set("width",width);
@@ -261,6 +312,8 @@
       `
 				  );
 
+      document.getElementById("main-content").style.display = "block";
+      document.getElementById("loading-container").style.display = "none";
       const myButton = document.getElementById('my-button');
       myButton.addEventListener('click', async function(){
 	  setTimeout(async () => {
@@ -801,8 +854,10 @@
 	//console.log('Mouse stopped');
 	mouseStop=true;
 	}, 100); // Adjust the delay as needed
+	} 
 	}
+    loadPyMOL();
     </script>
-   <center> <a href="https://github.com/yakomaxa/PyMOL-Wasm"> GitHub repository for this project (binary and javascript only at this moment) </a>  </center>
+   <a href="https://github.com/yakomaxa/PyMOL-Wasm"> GitHub repository for this project (binary and javascript only at this moment) </a>
   </body>
 </html>
