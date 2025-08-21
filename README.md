@@ -1,8 +1,13 @@
 # PyMOL-Wasm
 
-This is a repository providing a binary and html/javascript code for WebAssembly port of PyMOL.
+This is a repository providing a binary and HTML/JavaScript code for a WebAssembly port of PyMOL.
 
-I've checked latest google chrome and firefox can run this project.
+I've checked that the latest Google Chrome and Firefox can run this project.
+
+But (...added 2025/08/21),
+* Metal-based rendering might not work.
+* This project is based on PyMOL 2, while the original has moved on to PyMOL 3.
+* I'm sorry that the source code disclosure is delayed.
 
 # What's PyMOL-Wasm
 
