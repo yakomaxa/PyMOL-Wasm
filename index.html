@@ -455,14 +455,7 @@
 	  setTimeout(async () => {
 	      try {
         await pyodide.runPythonAsync(`
-        _p.cmd.bg_color("white")
-        _p.cmd.set("antialias",2)
-        _p.cmd.set("ray_opaque_background",0)
         _p.cmd.save("/test2.png")
-        _p.cmd.bg_color("black")
-        _p.cmd.set("antialias",0)
-        _p.cmd.set("ray_trace_mode",0)
-        _p.cmd.set("ray_opaque_background",0)
         print("DONE")
       `).then(async ()=>{
           var data = await pyodide.FS.readFile('/test2.png');
