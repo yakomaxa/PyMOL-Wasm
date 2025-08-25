@@ -454,8 +454,10 @@
       pngButton.addEventListener('click', async function(){
 	  setTimeout(async () => {
 	      try {
-        await pyodide.runPythonAsync(`
+		  await pyodide.runPythonAsync(`
+        _p.cmd.set("ray_opaque_background",1)
         _p.cmd.png("/test2.png")
+        _p.cmd.set("ray_opaque_background",0)
         print("DONE")
       `).then(async ()=>{
           var data = await pyodide.FS.readFile('/test2.png');
