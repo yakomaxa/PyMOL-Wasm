@@ -458,14 +458,14 @@
         _p.cmd.bg_color("white")
         _p.cmd.set("antialias",2)
         _p.cmd.set("ray_opaque_background",0)
-        _p.cmd.png("/test.png",ray=0)
+        _p.cmd.png("/test2.png",ray=0)
         _p.cmd.bg_color("black")
         _p.cmd.set("antialias",0)
         _p.cmd.set("ray_trace_mode",0)
         _p.cmd.set("ray_opaque_background",0)
         print("DONE")
       `).then(async ()=>{
-          var data = await pyodide.FS.readFile('/test.png');
+          var data = await pyodide.FS.readFile('/test2.png');
           var blob = new Blob([data], { type: 'application/octet-stream' });
           var url = URL.createObjectURL(blob);
           var link = document.createElement('a');
