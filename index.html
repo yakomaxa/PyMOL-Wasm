@@ -455,7 +455,7 @@
 	  setTimeout(async () => {
 	      try {
         await pyodide.runPythonAsync(`
-        _p.cmd.save("/test2.png")
+        _p.cmd.png("/test2.png")
         print("DONE")
       `).then(async ()=>{
           var data = await pyodide.FS.readFile('/test2.png');
