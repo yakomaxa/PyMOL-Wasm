@@ -448,35 +448,6 @@
 	  }, 100);
       })
 
-
-      const pngButton = document.getElementById('png-button');
-      pngButton.addEventListener('click', async function(){
-	  setTimeout(async () => {
-	      try {
-        await pyodide.runPythonAsync(`
-        _p.cmd.set("ray_opaque_background",1)
-        _p.cmd.png("/test2.png")
-        _p.cmd.set("ray_opaque_background",0)
-        print("DONE")
-      `).then(async ()=>{
-          var data = await pyodide.FS.readFile('/test2.png');
-          var blob = new Blob([data], { type: 'application/octet-stream' });
-          var url = URL.createObjectURL(blob);
-          var link = document.createElement('b');
-          link.href = url;
-          link.download = filename1+"_noray.png"; // Change the filename as needed
-          document.body.appendChild(link); // Add link to DOM
-          link.click();
-      }
-	     );
-
-        } catch (error) {
-
-
-	      }
-	  }, 100);
-      })
-
       const downloadButton = document.getElementById('download-button');
         downloadButton.addEventListener('click', async function(){
             await pyodide.runPythonAsync(`
