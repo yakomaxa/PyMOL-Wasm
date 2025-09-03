@@ -9,6 +9,9 @@ But (...added 2025/08/21),
 * This project is based on PyMOL 2, while the original has moved on to PyMOL 3.
 * I'm sorry that the source code disclosure is delayed.
 
+Note (added 2025/09/03):
+* Currently, google chrome does not launch well when OpenGL enabled in my environment, which means I cannot debug this project well as usual. Please wait for me to work on Issues till this problem is resolved. 
+
 # What's PyMOL-Wasm
 
 * This project is based on pymol-open-source. [pymol-open-source](https://github.com/schrodinger/pymol-open-source)
