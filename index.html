@@ -408,10 +408,10 @@
 	  setTimeout(async () => {
 	      try {
         await pyodide.runPythonAsync(`
-        _p.cmd.bg_color("white")
-        _p.cmd.set("antialias",2)
+        #_p.cmd.bg_color("white")
+        #_p.cmd.set("antialias",2)
         #_p.cmd.set("ray_trace_mode",2)
-        _p.cmd.set("ray_opaque_background",0)
+        #_p.cmd.set("ray_opaque_background",0)
         #_p.cmd.set("fog",0)
         #_p.cmd.set("ambient",0.66)
         #_p.cmd.set("reflect",0)
@@ -424,10 +424,10 @@
         #_p.cmd.set("cartoon_oval_quality", 25)
         #_p.cmd.set("cartoon_loop_quality", 100)
         _p.cmd.png("/test.png",ray=1)
-        _p.cmd.bg_color("black")
-        _p.cmd.set("antialias",0)
-        _p.cmd.set("ray_trace_mode",0)
-        _p.cmd.set("ray_opaque_background",0)
+        #_p.cmd.bg_color("black")
+        #_p.cmd.set("antialias",0)
+        #_p.cmd.set("ray_trace_mode",0)
+        #_p.cmd.set("ray_opaque_background",0)
         print("DONE")
       `).then(async ()=>{
           var data = await pyodide.FS.readFile('/test.png');
