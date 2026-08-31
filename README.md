@@ -33,6 +33,7 @@ Note (added 2025/09/03):
 * The resizing window after launching PyMOL makes the click-position recogntion wrong.
 * The dot representation is very weak to see and very heavy to load.
 * Trying to show the cell (unit cell) crashes the session.
+* set orthoscopic, 1 crashes the session. 
 
 # Dependency and requirements for building 
 
